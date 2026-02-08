@@ -223,21 +223,43 @@ function truncateMiddle(input: string, max = 600): string {
 function buildAnalysisPrompt(candidate: ConversationCandidate): string {
 	return [
 		"You are a strict postmortem reviewer for Pi coding-agent conversations.",
+		"Your goal is to help the user improve their agent setup so mistakes stop repeating.",
 		"",
 		`Analyze this session JSONL file: ${candidate.sessionPath}`,
 		"",
-		"Goal: identify what went wrong and what concrete mistakes the agent made in this conversation.",
-		"Focus on misses, root causes, and improvements. Use evidence from the session (quotes/tool actions).",
+		"Read the full session carefully. For each problem you find, classify the root cause into one of these categories:",
+		"- **Missing instructions**: The AGENTS.md, skills, or prompt templates lacked guidance the agent needed",
+		"- **Ignored instructions**: The agent had the right guidance but didn't follow it",
+		"- **Wrong approach**: The agent picked a bad strategy (e.g. over-engineering, wrong tool, rabbit hole)",
+		"- **Missing context**: The agent lacked project knowledge it should have been given upfront",
+		"- **Tool misuse**: The agent used tools incorrectly (e.g. destructive commands, wrong flags, skipping validation)",
+		"- **No issue found**: The conversation went well — note what worked and why",
+		"",
+		"For each problem, cite specific evidence from the session (tool calls, commands, or agent reasoning).",
 		"",
 		"Output ONLY markdown with these sections:",
-		"# Conversation Mistake Review",
-		"## Snapshot",
-		"## What went wrong",
-		"## Root causes",
-		"## Recommended fixes",
-		"## Quick prevention checklist",
 		"",
-		"Keep it practical and concise (max ~700 words).",
+		"# Session Review",
+		"",
+		"## Summary",
+		"One-paragraph overview: what was the task, did it succeed, and what was the main issue (if any).",
+		"",
+		"## Problems found",
+		"For each problem:",
+		"- What happened (with evidence from the session)",
+		"- Root cause category (from the list above)",
+		"- Impact (wasted time, broken code, wrong output, etc.)",
+		"",
+		"## Suggested AGENTS.md additions",
+		"Concrete rules or instructions that would have prevented these problems.",
+		"Write them as copy-pasteable bullet points or sections for an AGENTS.md file.",
+		"Only include this section if there are actual improvements to suggest.",
+		"",
+		"## Suggested workflow changes",
+		"Changes to skills, prompt templates, project structure, or development workflow that would help.",
+		"Only include this section if there are actual improvements to suggest.",
+		"",
+		"Keep it practical and concise (max ~800 words). Skip sections that don't apply.",
 		"Do not execute destructive commands. Read-only investigation only.",
 	].join("\n");
 }
@@ -255,32 +277,56 @@ function buildSummaryFileContent(candidate: ConversationCandidate, analysis: str
 
 function buildReviewerPrompt(summaryCount: number): string {
 	return [
-		"You are the reviewer agent for coding-workflow improvement.",
+		"You are a senior reviewer synthesizing session reviews into an actionable improvement plan.",
+		"Your audience is a developer who wants to make their coding agent stop repeating the same mistakes.",
 		"",
-		`You are given ${summaryCount} conversation mistake summaries from the last week.`,
-
-		"Synthesize recurring problems and produce a concrete improvement report.",
+		`You are given ${summaryCount} individual session reviews from recent conversations.`,
+		"",
+		"Your job:",
+		"1. Find recurring patterns across sessions — what types of mistakes keep happening?",
+		"2. Identify the highest-impact changes to AGENTS.md, skills, and workflows",
+		"3. Produce concrete, copy-pasteable improvements the user can apply immediately",
+		"",
+		"Root cause categories used in the session reviews:",
+		"- Missing instructions, Ignored instructions, Wrong approach, Missing context, Tool misuse",
 		"",
 		"Output ONLY markdown with these sections:",
-		"# Agentic Workflow Improvement Report",
-		"## Executive summary",
-		"## Recurring failure patterns",
-		"## Process improvements (team workflow)",
-		"## Documentation/instruction improvements",
-		"## Repo/tooling structure improvements",
-		"## Prioritized action plan (next 7 days)",
-		"## Metrics to track",
 		"",
-		"Be specific and opinionated. Avoid generic advice.",
+		"# Agent Improvement Report",
+		"",
+		"## Executive summary",
+		"2-3 sentences: what's the biggest problem and the single most impactful fix.",
+		"",
+		"## Recurring failure patterns",
+		"Group related problems across sessions. For each pattern:",
+		"- Description and frequency (how many sessions affected)",
+		"- Root cause category",
+		"- Example evidence from the session reviews",
+		"",
+		"## AGENTS.md improvements",
+		"Concrete rules, guidelines, or sections to add to the project's AGENTS.md.",
+		"Write them as ready-to-paste markdown — the user should be able to copy these directly.",
+		"Prioritize by impact (most frequent/costly patterns first).",
+		"",
+		"## Skill and workflow improvements",
+		"Suggested changes to pi skills, prompt templates, project structure, or development workflow.",
+		"Be specific: name the skill to create/modify, the template to add, or the structural change to make.",
+		"",
+		"## What's working well",
+		"Patterns from sessions that went smoothly. What should the user keep doing?",
+		"",
+		"Be specific and opinionated. Every suggestion must tie back to evidence from the session reviews.",
+		"Avoid generic advice like 'add more tests' or 'improve documentation' unless backed by specific failures.",
 	].join("\n");
 }
 
 function buildReviewerInputBundle(summaryPaths: string[]): string {
 	const lines: string[] = [];
-	lines.push("# Weekly conversation mistake summaries");
+	lines.push("# Session reviews for synthesis");
 	lines.push("");
-	lines.push(`Total summaries: ${summaryPaths.length}`);
+	lines.push(`Total reviews: ${summaryPaths.length}`);
 	lines.push(`Generated: ${new Date().toISOString()}`);
+	lines.push("Each review below analyzes one coding agent conversation, identifying problems, root causes, and suggested fixes.");
 	lines.push("");
 
 	for (const summaryPath of summaryPaths) {

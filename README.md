@@ -61,23 +61,22 @@ All output goes to `.pi/reports/conversation-retro/` by default:
 - **Improvement report:** `workflow-improvement-report-<timestamp>.md` — synthesized patterns and action items
 - **Latest report:** `workflow-improvement-report-latest.md` — always points to the most recent report
 
-### Per-conversation summary sections
+### Per-session review sections
 
-- Snapshot
-- What went wrong
-- Root causes
-- Recommended fixes
-- Quick prevention checklist
+- **Summary** — what was the task, did it succeed, what was the main issue
+- **Problems found** — each with evidence, root cause category, and impact
+- **Suggested AGENTS.md additions** — copy-pasteable rules that would have prevented the problems
+- **Suggested workflow changes** — improvements to skills, templates, or project structure
+
+Each problem is classified into a root cause category: *missing instructions*, *ignored instructions*, *wrong approach*, *missing context*, or *tool misuse*.
 
 ### Improvement report sections
 
-- Executive summary
-- Recurring failure patterns
-- Process improvements
-- Documentation/instruction improvements
-- Repo/tooling structure improvements
-- Prioritized action plan (next 7 days)
-- Metrics to track
+- **Executive summary** — biggest problem and most impactful fix
+- **Recurring failure patterns** — grouped by frequency and root cause category
+- **AGENTS.md improvements** — ready-to-paste markdown rules and guidelines
+- **Skill and workflow improvements** — specific skills, templates, or structural changes to make
+- **What's working well** — patterns to keep
 
 ## How it works
 
