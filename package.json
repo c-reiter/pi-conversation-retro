@@ -1,6 +1,6 @@
 {
   "name": "pi-conversation-retro",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pi extension for session review, conversation analysis, and agent mistake detection. Runs automated postmortem reviews on coding agent conversations to surface failure patterns and generate improvement reports for your AGENTS.md and workflows.",
   "type": "module",
   "keywords": [
