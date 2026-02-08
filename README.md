@@ -1,14 +1,22 @@
 # pi-conversation-retro
 
-A [pi](https://github.com/badlogic/pi-mono) extension that runs automated postmortem reviews on your coding agent conversations. It identifies mistakes, analyzes root causes, and generates weekly improvement reports.
+A [pi](https://github.com/badlogic/pi-mono) extension for **session review**, **conversation analysis**, and **agent mistake detection**. It runs automated postmortem reviews on your coding agent conversations — identifying where your agent went wrong, analyzing root causes, and generating actionable improvement reports.
+
+## Why
+
+Coding agents make the same kinds of mistakes over and over: misreading instructions, skipping validation, hallucinating APIs, breaking working code, or going down rabbit holes. The problem is that these patterns are invisible unless you manually re-read every conversation — which nobody does.
+
+This extension does it for you. It reviews your recent pi sessions, surfaces recurring failure patterns, and tells you exactly what to fix. Use the output to update your `AGENTS.md`, project instructions, skills, or workflows so your agent stops repeating the same mistakes. Over time, each retro makes your agent setup measurably better.
 
 ## What it does
 
 1. **Discovers** recent pi session files related to the current repo (via `git rev-parse --show-toplevel`)
 2. **Skips** sessions that already have a summary markdown file
-3. **Spawns** one reviewer subagent per remaining session to analyze mistakes
-4. **Writes** one markdown summary per session
-5. **Synthesizes** all in-scope summaries into a workflow improvement report
+3. **Spawns** one reviewer subagent per remaining session to analyze mistakes and evaluate conversation quality
+4. **Writes** one markdown summary per session with concrete findings
+5. **Synthesizes** all in-scope summaries into a workflow improvement report with prioritized action items
+
+The result is a structured feedback loop: run a retro → read the report → update your agent instructions → fewer mistakes next week.
 
 ## Install
 
