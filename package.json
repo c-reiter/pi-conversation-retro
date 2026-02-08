@@ -1,0 +1,40 @@
+{
+  "name": "pi-conversation-retro",
+  "version": "0.1.0",
+  "description": "Pi extension that runs automated postmortem reviews on your coding agent conversations, identifying mistakes and generating weekly improvement reports",
+  "type": "module",
+  "keywords": [
+    "pi",
+    "pi-package",
+    "coding-agent",
+    "extensions",
+    "retrospective",
+    "postmortem",
+    "conversation-review",
+    "workflow-improvement"
+  ],
+  "pi": {
+    "extensions": ["./extensions/index.ts"]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c-reiter/pi-conversation-retro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/c-reiter/pi-conversation-retro/issues"
+  },
+  "homepage": "https://github.com/c-reiter/pi-conversation-retro#readme",
+  "license": "MIT",
+  "author": "Claudio Reiter",
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-tui": "*",
+    "@sinclair/typebox": "*"
+  },
+  "files": [
+    "extensions/",
+    "README.md",
+    "LICENSE"
+  ]
+}
